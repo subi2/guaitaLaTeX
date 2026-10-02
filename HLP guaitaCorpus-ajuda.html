@@ -1,0 +1,453 @@
+<!--
+  Guaita Apps - Suite d'eines autònomes per a arquitectura, BIM i documentació.
+  Copyright (c) 2026 Jordi Subirós
+  GNU Affero General Public License v3.0
+  See LICENSE file for details
+-->
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>guaitaCorpus · Manual d'ús</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1116; --panel:#12161D; --panel-2:#171C24; --panel-3:#1E232B;
+  --line:#242B35; --line-soft:#1B212A; --txt:#E7EAEE; --dim:#8B939F; --dim-2:#5C6470;
+  --accent:#C6FF00; --accent-2:#FF2ECC; --accent-3:#00E5FF; --accent-4:#FFE500;
+  --accent-ink:#16190A; --radius:8px;
+  font-size:15px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Mono',monospace; background:var(--ink); color:var(--txt); line-height:1.65;}
+a{color:var(--accent-3);}
+code{font-family:'IBM Plex Mono',monospace; background:var(--panel-2); padding:1px 6px; border-radius:4px; font-size:.92em;}
+kbd{font-family:'IBM Plex Mono',monospace; background:var(--panel-2); border:1px solid var(--line); border-bottom-width:2px;
+  border-radius:4px; padding:1px 7px; font-size:.85em;}
+
+/* ─── Marca (regla obligatòria) ─── */
+.cells{display:inline-grid; grid-template-columns:1fr 1fr; gap:3px; vertical-align:middle;}
+.brand .cells{width:32px; height:32px;}
+.brand .cells span{width:13px; height:13px; border-radius:3px;}
+.fb .cells{width:15px; height:15px;}
+.fb .cells span{width:6px; height:6px; border-radius:1.5px;}
+.cells span:nth-child(1){background:var(--accent);}
+.cells span:nth-child(2){background:var(--accent-2);}
+.cells span:nth-child(3){background:var(--accent-3);}
+.cells span:nth-child(4){background:var(--accent-4);}
+
+/* ─── Capçalera ─── */
+header.hero{padding:64px 8vw 48px; border-bottom:1px solid var(--line);
+  background:radial-gradient(ellipse at top left, #161B24 0%, var(--ink) 60%);}
+.brand{display:flex; align-items:center; gap:12px; margin-bottom:28px;}
+.brand b{font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:700; letter-spacing:.04em;}
+.brand small{font-size:12px; color:var(--dim); text-transform:lowercase; letter-spacing:.02em; margin-left:2px;}
+.tag{display:inline-block; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent);
+  border:1px solid var(--accent); border-radius:20px; padding:4px 12px; margin-bottom:18px;}
+h1.title{font-family:'Space Grotesk',sans-serif; font-size:clamp(28px,4vw,42px); font-weight:700; max-width:820px;}
+p.lead{color:var(--dim); max-width:640px; margin-top:14px; font-size:15px;}
+.hero-badges{display:flex; gap:8px; margin-top:22px; flex-wrap:wrap;}
+.hero-badges span{font-size:11px; color:var(--dim-2); border:1px solid var(--line); border-radius:14px; padding:4px 10px;}
+
+/* ─── Cos: índex + contingut ─── */
+.cos{display:flex; align-items:flex-start;}
+nav.toc{position:sticky; top:0; align-self:flex-start; width:250px; flex:0 0 auto; height:100vh; overflow-y:auto;
+  border-right:1px solid var(--line); padding:28px 18px; background:var(--panel);}
+nav.toc .etq{font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim-2); margin:18px 0 8px; }
+nav.toc .etq:first-child{margin-top:0;}
+nav.toc a{display:block; font-size:13px; color:var(--dim); text-decoration:none; padding:6px 10px; border-radius:6px;
+  border-left:2px solid transparent; margin-bottom:2px;}
+nav.toc a:hover{color:var(--txt); background:var(--panel-2);}
+nav.toc a.actiu{color:var(--accent); border-left-color:var(--accent); background:var(--panel-2); font-weight:600;}
+main{flex:1; min-width:0;}
+
+section{padding:44px 6vw; border-bottom:1px solid var(--line-soft); max-width:900px;}
+section h2.etq{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:8px;}
+section .st{font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:600; margin-bottom:16px;}
+section p{margin-bottom:12px; max-width:70ch;}
+section p.ajuda{color:var(--dim); font-size:13.5px;}
+section ul,section ol{margin:10px 0 16px 22px;}
+section li{margin-bottom:6px;}
+
+/* Avisos */
+.note{background:var(--panel-2); border-left:3px solid var(--accent-3); padding:12px 16px; border-radius:6px; margin:16px 0; font-size:13.5px;}
+.note.warn{border-left-color:var(--accent-4);}
+.note.stop{border-left-color:var(--accent-2);}
+
+/* Passos */
+ol.steps{list-style:none; margin:16px 0; counter-reset:pas;}
+ol.steps li{counter-increment:pas; position:relative; padding-left:38px; margin-bottom:14px;}
+ol.steps li::before{content:counter(pas); position:absolute; left:0; top:0; width:26px; height:26px; border-radius:50%;
+  background:var(--panel-2); border:1px solid var(--accent); color:var(--accent); font-size:12px; font-weight:600;
+  display:flex; align-items:center; justify-content:center;}
+
+/* Targetes */
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:16px 0;}
+.card{background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius); padding:16px;}
+.card h3{font-family:'Space Grotesk',sans-serif; font-size:15px; margin-bottom:6px; color:var(--accent);}
+.card p{font-size:13px; color:var(--dim); margin:0;}
+
+/* Taules */
+table.tbl{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px;}
+table.tbl th{text-align:left; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);
+  border-bottom:1px solid var(--line); padding:8px 10px;}
+table.tbl td{border-bottom:1px solid var(--line-soft); padding:9px 10px; vertical-align:top;}
+
+/* Mapa de panells */
+.map{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin:16px 0;}
+.map div{background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:12px; font-size:12.5px;}
+.map div b{display:block; color:var(--accent); font-size:12.5px; margin-bottom:3px;}
+
+/* FAQ */
+details{background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:12px 16px; margin-bottom:8px;}
+details summary{cursor:pointer; font-weight:600; font-size:13.5px;}
+details p{margin-top:8px; font-size:13.5px; color:var(--dim);}
+
+/* ─── Peu ─── */
+footer.fb{padding:40px 6vw; text-align:center; border-top:1px solid var(--line); background:var(--panel);}
+footer.fb .brand{justify-content:center; margin-bottom:14px;}
+footer.fb .brand b{font-size:14px;}
+footer.fb p{font-size:11.5px; color:var(--dim-2); max-width:640px; margin:4px auto;}
+footer.fb .legal{margin-top:14px; font-size:10.5px; color:var(--dim-2); max-width:720px; margin-left:auto; margin-right:auto;}
+
+@media (max-width:860px){
+  .cos{flex-direction:column;}
+  nav.toc{position:static; width:100%; height:auto;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="brand">
+    <span class="cells"><span></span><span></span><span></span><span></span></span>
+    <b>GUAITA<small>corpus</small></b>
+  </div>
+  <span class="tag">Manual d'ús</span>
+  <h1 class="title">Fons documental amb visor, cerca de contingut, graf de relacions i assistent IA — tot en un sol fitxer</h1>
+  <p class="lead">guaitaCorpus organitza una carpeta de documents PDF, HTML, Markdown, EPUB, LaTeX i BibTeX: els desa en el seu format
+    original, en genera fitxes de metadades, els indexa per a cerca de text complet, en dibuixa el graf de
+    relacions i, si ho configures, et deixa preguntar-hi coses amb un model d'IA extern. Tot passa al teu
+    navegador i a la teva carpeta — no hi ha servidor, ni compte, ni instal·lació.</p>
+  <div class="hero-badges">
+    <span>Sense servidor</span><span>Sense compte</span><span>Un sol fitxer HTML</span>
+    <span>AGPL-3.0</span><span>Dades locals</span>
+  </div>
+</header>
+
+<div class="cos">
+<nav class="toc" id="toc">
+  <div class="etq">Primers passos</div>
+  <a href="#inici">Obrir un fons documental</a>
+  <a href="#visor">El visor</a>
+  <a href="#epub">Lector d'EPUB</a>
+  <a href="#importador">Importar documents</a>
+  <div class="etq">Organitzar</div>
+  <a href="#fitxa">Fitxa de metadades</a>
+  <a href="#colleccions">Col·leccions</a>
+  <a href="#duplicats">Duplicats</a>
+  <a href="#notebook">Notebook</a>
+  <div class="etq">Trobar</div>
+  <a href="#cerca">Cerca i filtres</a>
+  <a href="#graf">Graf de relacions</a>
+  <div class="etq">Assistit</div>
+  <a href="#ia">Assistent IA</a>
+  <a href="#biblio">Bibliografia i citació</a>
+  <a href="#veu">Lectura en veu alta</a>
+  <div class="etq">Referència</div>
+  <a href="#panells">Mapa de panells</a>
+  <a href="#faq">Preguntes freqüents</a>
+</nav>
+
+<main>
+
+<section id="inici">
+  <h2 class="etq">01 · Primers passos</h2>
+  <div class="st">Obrir un fons documental</div>
+  <p>guaitaCorpus no importa cap document a cap base de dades interna: tria una carpeta del teu ordinador
+    (el <b>fons documental</b>) i hi treballa directament, mitjançant l'API d'accés a fitxers del navegador.</p>
+  <ol class="steps">
+    <li>Prem <b>Tria carpeta arrel</b> a la capçalera i selecciona la carpeta on vius o vulguis desar els teus
+      documents.</li>
+    <li>El navegador et demanarà permís de lectura i escriptura per a aquesta carpeta. Cal acceptar-lo perquè
+      l'app pugui desar fitxes, índexs i documents importats.</li>
+    <li>guaitaCorpus recorre la carpeta (i les subcarpetes) buscant fitxers <code>.pdf</code>, <code>.html</code>,
+      <code>.htm</code> i <code>.md</code>, i els llista a l'esquerra.</li>
+  </ol>
+  <div class="note">La propera vegada que obris l'app al mateix navegador, prova de reconnectar automàticament
+    amb la darrera carpeta. Si el navegador n'ha revocat el permís, apareix el botó
+    <b>Reconnecta carpeta</b>.</div>
+  <p class="ajuda">Els fitxers HTML que pertanyen a la mateixa suite Guaita Apps (detectats per la seva
+    capçalera de llicència, no pel nom) s'exclouen automàticament del llistat perquè no s'indexin a si
+    mateixos ni els uns als altres.</p>
+</section>
+
+<section id="visor">
+  <h2 class="etq">02 · Primers passos</h2>
+  <div class="st">El visor</div>
+  <p>Fes clic a qualsevol document de la llista per obrir-lo al panell principal:</p>
+  <div class="cards">
+    <div class="card"><h3>PDF</h3><p>Es mostra amb el lector natiu del navegador (el mateix que faries servir
+      obrint un PDF directament). No cal cap complement.</p></div>
+    <div class="card"><h3>HTML</h3><p>Es carrega en un marc aïllat (sandbox) perquè el seu propi codi no pugui
+      interferir amb l'app.</p></div>
+    <div class="card"><h3>Markdown</h3><p>Es converteix a HTML amb un petit motor propi (capçaleres, llistes,
+      cites, codi, negreta i cursiva) i es mostra en un full de lectura clar.</p></div>
+    <div class="card"><h3>EPUB</h3><p>Lector complet amb taula de continguts i navegació entre capítols —
+      vegeu la secció següent.</p></div>
+    <div class="card"><h3>LaTeX (.tex)</h3><p>Es mostra el codi font amb ressaltat lleuger de comandes, entorns
+      i comentaris. No es compila ni es genera cap PDF a partir del fitxer.</p></div>
+    <div class="card"><h3>BibTeX (.bib)</h3><p>En lloc del text en cru, es llegeixen les entrades i es mostren
+      com una llista amb títol, autoria i any.</p></div>
+  </div>
+  <p class="ajuda">La cerca de nous documents a la carpeta és manual: prem <b>⟳ Actualitza</b> quan hagis afegit
+    o mogut fitxers des de fora de l'app.</p>
+</section>
+
+<section id="epub">
+  <h2 class="etq">03 · Primers passos</h2>
+  <div class="st">Lector d'EPUB</div>
+  <p>En obrir un EPUB, el panell principal es divideix en dues columnes: la taula de continguts del llibre a
+    l'esquerra i el capítol actual a la dreta.</p>
+  <ul>
+    <li>Fes clic a qualsevol entrada de la taula de continguts (incloses les subseccions) per saltar-hi
+      directament.</li>
+    <li><b>← Anterior</b> i <b>Següent →</b> avancen segons l'ordre de lectura definit pel propi llibre.</li>
+    <li>Les imatges i els fulls d'estil interns del capítol es mostren correctament; no cal cap connexió a
+      internet.</li>
+  </ul>
+  <p class="ajuda">La taula de continguts es llegeix del propi EPUB (format EPUB 3 o EPUB 2); si el llibre no en
+    porta cap, es genera una llista senzilla a partir de l'ordre dels capítols.</p>
+</section>
+
+<section id="importador">
+
+  <h2 class="etq">04 · Primers passos</h2>
+  <div class="st">Importar documents</div>
+  <p>El botó <b>Importa</b> obre un calaix amb tres vies per fer créixer el fons documental:</p>
+  <table class="tbl">
+    <tr><th>Via</th><th>Què fa</th></tr>
+    <tr><td>URL o DOI</td><td>Si hi enganxes un DOI, consulta CrossRef i mostra títol, autoria i any per
+      ajudar-te a identificar l'article — no en descarrega el PDF (per restriccions del navegador).</td></tr>
+    <tr><td>Bookmarklet</td><td>Un enllaç per arrossegar a la barra d'adreces d'interès. Des de qualsevol
+      pàgina web, en fer-hi clic, envia el contingut a guaitaCorpus.</td></tr>
+    <tr><td>Arrossegar / triar fitxers</td><td>Deixa anar fitxers PDF, HTML, MD, EPUB, TeX o BibTeX sobre la zona indicada, o
+      tria'ls amb el selector del sistema. Es copien dins la carpeta arrel.</td></tr>
+  </table>
+  <div class="note warn">El bookmarklet obre una finestra apuntant a l'adreça actual de guaitaCorpus. Si l'has
+    obert com a fitxer local (<code>file://</code>), molts navegadors bloquegen aquesta obertura des d'una
+    pàgina externa. Funciona de manera fiable si serveixes l'app des d'un servidor local.</div>
+  <p>Quan el contingut és HTML (arrossegat o capturat pel bookmarklet), apareix un diàleg amb dues opcions:</p>
+  <ul>
+    <li><b>Desa HTML original</b>: guarda l'HTML tal qual a la carpeta, com una instantània.</li>
+    <li><b>Imprimeix a PDF</b>: obre el diàleg d'impressió del navegador perquè el desis tu mateix com a PDF
+      (el navegador no permet fer-ho de manera totalment automàtica).</li>
+  </ul>
+</section>
+
+<section id="fitxa">
+  <h2 class="etq">05 · Organitzar</h2>
+  <div class="st">Fitxa de metadades</div>
+  <p>Amb un document obert, prem <b>Fitxa</b> per veure'n i editar-ne les metadades: títol, autors, any,
+    etiquetes, si l'has llegit o el tens com a destacat, i notes ràpides.</p>
+  <ol class="steps">
+    <li>Omple els camps que et calguin. Les etiquetes es mostren com a xips de colors — el color el genera
+      l'app a partir del text de l'etiqueta, sempre igual per a la mateixa paraula.</li>
+    <li>Marca les col·leccions a què vols que pertanyi el document (vegeu més avall).</li>
+    <li>Afegeix relacions manuals a altres documents del fons, amb una etiqueta lliure com «citat per» o
+      «versió de».</li>
+    <li>Prem <b>Desa la fitxa</b>.</li>
+  </ol>
+  <div class="note">Cada fitxa es desa com un petit fitxer <code>.guaita.json</code> al costat del document
+    original, amb el mateix nom més aquest sufix. El document en si mai es modifica.</div>
+</section>
+
+<section id="colleccions">
+  <h2 class="etq">06 · Organitzar</h2>
+  <div class="st">Col·leccions</div>
+  <p>Les col·leccions et deixen agrupar documents sense moure'ls de lloc. Es creen amb el botó
+    <b>+</b> de la barra de col·leccions (sota el cercador), i es filtren fent clic al seu xip — «Totes» les
+    treu totes.</p>
+  <p class="ajuda">Per ara les col·leccions són planes (sense subcol·leccions niades).</p>
+</section>
+
+<section id="duplicats">
+  <h2 class="etq">07 · Organitzar</h2>
+  <div class="st">Detecció de duplicats</div>
+  <p>guaitaCorpus calcula, en segon pla, una empremta digital (SHA-256) de cada document. Si dos fitxers tenen
+    exactament el mateix contingut, tots dos es marquen a la llista amb la insígnia <b>⧉</b>; passa-hi el
+    cursor per veure de quin altre fitxer és còpia.</p>
+  <p class="ajuda">Els fitxers de més de 25 MB no es comparen, per no alentir l'aplicació.</p>
+</section>
+
+<section id="notebook">
+  <h2 class="etq">08 · Organitzar</h2>
+  <div class="st">Notebook</div>
+  <p>El botó <b>Notebook</b> reuneix en un sol lloc totes les notes: les que has afegit des de la fitxa de
+    cada document i les notes independents que no pertanyen a cap fitxer concret.</p>
+  <ul>
+    <li>Escriu <code>[[un text]]</code> dins d'una nota per convertir-lo en un enllaç; en fer-hi clic, filtra el
+      Notebook per aquell text.</li>
+    <li>Cada nota de document mostra a quin fitxer pertany; fes-hi clic per obrir-lo.</li>
+  </ul>
+</section>
+
+<section id="cerca">
+  <h2 class="etq">09 · Trobar</h2>
+  <div class="st">Cerca i filtres</div>
+  <p>El camp de cerca de la barra lateral busca alhora en el nom de fitxer, el títol, els autors, les
+    etiquetes <b>i el contingut complet</b> dels documents (PDF inclòs, gràcies a un motor d'extracció de
+    text incrustat).</p>
+  <div class="map">
+    <div><b>No llegits / Destacats</b>Filtren segons l'estat marcat a la fitxa.</div>
+    <div><b>Recents (7d)</b>Documents modificats en els darrers 7 dies.</div>
+    <div><b>PDF / HTML / MD</b>Filtren per tipus de fitxer.</div>
+  </div>
+  <p>Els filtres es poden combinar (funcionen en conjunció: cal complir-los tots alhora). Amb el botó
+    <b>💾</b> pots desar la combinació actual de cerca, filtres i col·lecció com una <b>cerca desada</b>,
+    que apareix com un xip 🔖 sota el cercador — clic per tornar-hi a aplicar, doble clic per esborrar-la.</p>
+  <div class="note">La indexació de text passa en segon pla just després d'obrir o actualitzar la carpeta.
+    Mentre dura (visible al peu de pàgina), la cerca de contingut pot no trobar encara tots els documents.</div>
+</section>
+
+<section id="graf">
+  <h2 class="etq">10 · Trobar</h2>
+  <div class="st">Graf de relacions</div>
+  <p>El botó <b>Graf</b> obre una visualització a pantalla completa amb tots els documents com a nodes.
+    S'hi dibuixen connexions per tres motius:</p>
+  <table class="tbl">
+    <tr><th>Color</th><th>Origen de la relació</th></tr>
+    <tr><td>Gris</td><td>Etiqueta compartida (només si la comparteixen entre 2 i 8 documents — les etiquetes
+      massa comunes no es dibuixen, per no saturar el graf).</td></tr>
+    <tr><td>Blau</td><td>Pertinença a la mateixa col·lecció.</td></tr>
+    <tr><td>Llima discontínua</td><td>Relació manual afegida des de la fitxa d'un document.</td></tr>
+  </table>
+  <p>Arrossega els nodes per reorganitzar-los, arrossega el fons per desplaçar la vista, gira la roda del
+    ratolí per fer-hi zoom, i fes clic a un node per obrir aquell document.</p>
+</section>
+
+<section id="ia">
+  <h2 class="etq">11 · Assistit</h2>
+  <div class="st">Assistent IA</div>
+  <p>El calaix <b>IA</b> connecta guaitaCorpus a un model de llenguatge extern, sota el teu control complet:</p>
+  <ol class="steps">
+    <li>Tria el format (<b>Compatible OpenAI</b> o <b>Anthropic</b>), l'endpoint, la teva clau d'API i el nom
+      del model, i prem <b>Desa configuració</b>.</li>
+    <li>Fes servir <b>Pregunta</b> per preguntar sobre el corpus: guaitaCorpus selecciona els documents més
+      rellevants segons l'índex de cerca, n'envia fragments com a context, i la resposta cita quins documents
+      ha fet servir.</li>
+    <li><b>Resumeix</b> genera un resum del document obert; pots desar-lo com a nota amb un clic.</li>
+    <li><b>Suggereix</b> proposa etiquetes a partir del contingut. Es mostren com a xips: <b>no s'afegeix
+      cap etiqueta fins que en clics una individualment.</b></li>
+  </ol>
+  <div class="note stop">La configuració (inclosa la clau d'API) es desa només al navegador
+    (<code>localStorage</code>), mai dins la carpeta del fons documental. No la comparteixis si sincronitzes
+    o versiones aquesta carpeta.</div>
+  <div class="note warn">Segons el proveïdor, la crida directa des del navegador pot topar amb restriccions
+    CORS. Si falla, l'error mostra el codi HTTP retornat pel servidor.</div>
+</section>
+
+<section id="biblio">
+  <h2 class="etq">12 · Assistit</h2>
+  <div class="st">Bibliografia i citació</div>
+  <p>El calaix <b>Bibliografia</b> treballa sempre sobre els documents actualment <b>visibles</b> a la llista
+    (respecta el cercador, els filtres i la col·lecció activa).</p>
+  <ul>
+    <li><b>Exporta</b> — genera un fitxer <code>.bib</code> (BibTeX), <code>.ris</code> o <code>.json</code>
+      (CSL-JSON) a la carpeta arrel, a partir de les fitxes de metadades.</li>
+    <li><b>Citació formatada</b> — tria un estil (APA, Chicago autor-data, IEEE o MLA) i prem
+      <b>Genera bibliografia</b> per obtenir-la ja formatada. També pots carregar qualsevol altre estil
+      <code>.csl</code> propi.</li>
+    <li><b>Importa BibTeX / RIS</b> — arrossega o tria un fitxer; cada entrada es vincula per semblança de
+      títol amb un document ja present al fons (mai en crea de nous). Revisa les coincidències marcades
+      abans de prémer <b>Importa els marcats</b>.</li>
+  </ul>
+  <p class="ajuda">L'ISO 690 no compta amb una implementació CSL oficial disponible; per això no hi és per
+    defecte entre els estils integrats — carrega'n un de propi si el necessites.</p>
+</section>
+
+<section id="veu">
+  <h2 class="etq">13 · Assistit</h2>
+  <div class="st">Lectura en veu alta</div>
+  <p>Amb un document obert, la barra superior del visor ofereix <b>🔊 Llegeix</b>, <b>⏸ Pausa</b> i
+    <b>⏹ Atura</b>, fent servir la síntesi de veu del mateix navegador (cap servei extern). Llegeix el text ja
+    extret del document, en català.</p>
+  <p class="ajuda">Si encara no s'ha acabat d'extreure el text (indexació en curs), t'ho avisa i prova-ho de
+    nou en uns segons.</p>
+</section>
+
+<section id="panells">
+  <h2 class="etq">14 · Referència</h2>
+  <div class="st">Mapa de panells</div>
+  <div class="map">
+    <div><b>Importa</b>URL/DOI, bookmarklet, arrossegar fitxers.</div>
+    <div><b>Fitxa</b>Metadades, etiquetes, col·leccions, relacions, notes.</div>
+    <div><b>Notebook</b>Totes les notes, amb enllaços [[wiki]].</div>
+    <div><b>Graf</b>Visualització de relacions a pantalla completa.</div>
+    <div><b>IA</b>Configuració i consultes al model de llenguatge.</div>
+    <div><b>Bibliografia</b>Exportació, citació i importació BibTeX/RIS.</div>
+  </div>
+  <p class="ajuda">Tecla <kbd>Esc</kbd> tanca qualsevol calaix o diàleg obert.</p>
+</section>
+
+<section id="faq">
+  <h2 class="etq">15 · Referència</h2>
+  <div class="st">Preguntes freqüents</div>
+  <details><summary>El navegador no m'ofereix "Tria carpeta arrel"</summary>
+    <p>Necessites un navegador amb suport per a la File System Access API (Chrome o Edge recents). Altres
+      navegadors encara no la implementen.</p></details>
+  <details><summary>He tornat a obrir l'app i em demana reconnectar</summary>
+    <p>És normal: per seguretat, el navegador no manté el permís d'escriptura indefinidament sense
+      confirmació. Prem <b>Reconnecta carpeta</b>.</p></details>
+  <details><summary>El bookmarklet no fa res en clicar-hi</summary>
+    <p>Sol passar quan guaitaCorpus s'ha obert directament com a fitxer (<code>file://</code>). Serveix l'app
+      des d'un servidor local perquè el bookmarklet pugui obrir-hi una finestra.</p></details>
+  <details><summary>La cerca no troba text dins d'un PDF que sé que hi és</summary>
+    <p>Comprova l'indicador d'indexació al peu de pàgina — potser encara està processant els documents més
+      grans. Si el PDF és una imatge escanejada sense capa de text, no es pot indexar (guaitaCorpus no fa
+      OCR).</p></details>
+  <details><summary>Les meves etiquetes o notes han desaparegut</summary>
+    <p>Revisa que la carpeta arrel sigui la mateixa d'abans: les metadades viuen en fitxers
+      <code>.guaita.json</code> dins la carpeta, no dins el navegador.</p></details>
+  <details><summary>És segur enganxar la meva clau d'API?</summary>
+    <p>Es desa només al <code>localStorage</code> d'aquest navegador, mai a la carpeta ni en cap servidor de
+      guaitaCorpus. Igualment, tracta-la amb la mateixa cura que qualsevol contrasenya.</p></details>
+</section>
+
+</main>
+</div>
+
+<footer class="fb">
+  <div class="brand">
+    <span class="cells"><span></span><span></span><span></span><span></span></span>
+    <b>GUAITA<small>corpus</small></b>
+  </div>
+  <p>SBS BIM Consulting 2026</p>
+  <p class="legal">Guaita Apps es distribueix «tal com és», sense cap garantia. Les eines estan pensades desde
+    la recerca i com a suport tècnic i educatiu; la verificació dels resultats i la responsabilitat derivada
+    del seu ús recauen únicament sobre l'usuari final.</p>
+</footer>
+
+<script>
+(function(){
+  var enllacos = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var seccions = enllacos.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function actualitza(){
+    var pos = window.scrollY + 120;
+    var actiu = 0;
+    for(var i=0;i<seccions.length;i++){
+      if(seccions[i] && seccions[i].offsetTop <= pos) actiu = i;
+    }
+    enllacos.forEach(function(a,i){ a.classList.toggle('actiu', i===actiu); });
+  }
+  window.addEventListener('scroll', actualitza, {passive:true});
+  actualitza();
+})();
+</script>
+</body>
+</html>

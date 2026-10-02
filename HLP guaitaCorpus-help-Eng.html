@@ -1,0 +1,453 @@
+<!--
+  Guaita Apps - Suite of standalone tools for architecture, BIM, and documentation.
+  Copyright (c) 2026 Jordi Subirós
+  GNU Affero General Public License v3.0
+  See LICENSE file for details
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>guaitaCorpus · User Manual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1116; --panel:#12161D; --panel-2:#171C24; --panel-3:#1E232B;
+  --line:#242B35; --line-soft:#1B212A; --txt:#E7EAEE; --dim:#8B939F; --dim-2:#5C6470;
+  --accent:#C6FF00; --accent-2:#FF2ECC; --accent-3:#00E5FF; --accent-4:#FFE500;
+  --accent-ink:#16190A; --radius:8px;
+  font-size:15px;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'IBM Plex Mono',monospace; background:var(--ink); color:var(--txt); line-height:1.65;}
+a{color:var(--accent-3);}
+code{font-family:'IBM Plex Mono',monospace; background:var(--panel-2); padding:1px 6px; border-radius:4px; font-size:.92em;}
+kbd{font-family:'IBM Plex Mono',monospace; background:var(--panel-2); border:1px solid var(--line); border-bottom-width:2px;
+  border-radius:4px; padding:1px 7px; font-size:.85em;}
+
+/* ─── Brand (mandatory rule) ─── */
+.cells{display:inline-grid; grid-template-columns:1fr 1fr; gap:3px; vertical-align:middle;}
+.brand .cells{width:32px; height:32px;}
+.brand .cells span{width:13px; height:13px; border-radius:3px;}
+.fb .cells{width:15px; height:15px;}
+.fb .cells span{width:6px; height:6px; border-radius:1.5px;}
+.cells span:nth-child(1){background:var(--accent);}
+.cells span:nth-child(2){background:var(--accent-2);}
+.cells span:nth-child(3){background:var(--accent-3);}
+.cells span:nth-child(4){background:var(--accent-4);}
+
+/* ─── Header ─── */
+header.hero{padding:64px 8vw 48px; border-bottom:1px solid var(--line);
+  background:radial-gradient(ellipse at top left, #161B24 0%, var(--ink) 60%);}
+.brand{display:flex; align-items:center; gap:12px; margin-bottom:28px;}
+.brand b{font-family:'Space Grotesk',sans-serif; font-size:21px; font-weight:700; letter-spacing:.04em;}
+.brand small{font-size:12px; color:var(--dim); text-transform:lowercase; letter-spacing:.02em; margin-left:2px;}
+.tag{display:inline-block; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent);
+  border:1px solid var(--accent); border-radius:20px; padding:4px 12px; margin-bottom:18px;}
+h1.title{font-family:'Space Grotesk',sans-serif; font-size:clamp(28px,4vw,42px); font-weight:700; max-width:820px;}
+p.lead{color:var(--dim); max-width:640px; margin-top:14px; font-size:15px;}
+.hero-badges{display:flex; gap:8px; margin-top:22px; flex-wrap:wrap;}
+.hero-badges span{font-size:11px; color:var(--dim-2); border:1px solid var(--line); border-radius:14px; padding:4px 10px;}
+
+/* ─── Body: index + content ─── */
+.cos{display:flex; align-items:flex-start;}
+nav.toc{position:sticky; top:0; align-self:flex-start; width:250px; flex:0 0 auto; height:100vh; overflow-y:auto;
+  border-right:1px solid var(--line); padding:28px 18px; background:var(--panel);}
+nav.toc .etq{font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim-2); margin:18px 0 8px; }
+nav.toc .etq:first-child{margin-top:0;}
+nav.toc a{display:block; font-size:13px; color:var(--dim); text-decoration:none; padding:6px 10px; border-radius:6px;
+  border-left:2px solid transparent; margin-bottom:2px;}
+nav.toc a:hover{color:var(--txt); background:var(--panel-2);}
+nav.toc a.actiu{color:var(--accent); border-left-color:var(--accent); background:var(--panel-2); font-weight:600;}
+main{flex:1; min-width:0;}
+
+section{padding:44px 6vw; border-bottom:1px solid var(--line-soft); max-width:900px;}
+section h2.etq{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:8px;}
+section .st{font-family:'Space Grotesk',sans-serif; font-size:26px; font-weight:600; margin-bottom:16px;}
+section p{margin-bottom:12px; max-width:70ch;}
+section p.ajuda{color:var(--dim); font-size:13.5px;}
+section ul,section ol{margin:10px 0 16px 22px;}
+section li{margin-bottom:6px;}
+
+/* Notices */
+.note{background:var(--panel-2); border-left:3px solid var(--accent-3); padding:12px 16px; border-radius:6px; margin:16px 0; font-size:13.5px;}
+.note.warn{border-left-color:var(--accent-4);}
+.note.stop{border-left-color:var(--accent-2);}
+
+/* Steps */
+ol.steps{list-style:none; margin:16px 0; counter-reset:pas;}
+ol.steps li{counter-increment:pas; position:relative; padding-left:38px; margin-bottom:14px;}
+ol.steps li::before{content:counter(pas); position:absolute; left:0; top:0; width:26px; height:26px; border-radius:50%;
+  background:var(--panel-2); border:1px solid var(--accent); color:var(--accent); font-size:12px; font-weight:600;
+  display:flex; align-items:center; justify-content:center;}
+
+/* Cards */
+.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin:16px 0;}
+.card{background:var(--panel-2); border:1px solid var(--line); border-radius:var(--radius); padding:16px;}
+.card h3{font-family:'Space Grotesk',sans-serif; font-size:15px; margin-bottom:6px; color:var(--accent);}
+.card p{font-size:13px; color:var(--dim); margin:0;}
+
+/* Tables */
+table.tbl{width:100%; border-collapse:collapse; margin:14px 0; font-size:13.5px;}
+table.tbl th{text-align:left; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--dim);
+  border-bottom:1px solid var(--line); padding:8px 10px;}
+table.tbl td{border-bottom:1px solid var(--line-soft); padding:9px 10px; vertical-align:top;}
+
+/* Panel map */
+.map{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin:16px 0;}
+.map div{background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:12px; font-size:12.5px;}
+.map div b{display:block; color:var(--accent); font-size:12.5px; margin-bottom:3px;}
+
+/* FAQ */
+details{background:var(--panel-2); border:1px solid var(--line); border-radius:6px; padding:12px 16px; margin-bottom:8px;}
+details summary{cursor:pointer; font-weight:600; font-size:13.5px;}
+details p{margin-top:8px; font-size:13.5px; color:var(--dim);}
+
+/* ─── Footer ─── */
+footer.fb{padding:40px 6vw; text-align:center; border-top:1px solid var(--line); background:var(--panel);}
+footer.fb .brand{justify-content:center; margin-bottom:14px;}
+footer.fb .brand b{font-size:14px;}
+footer.fb p{font-size:11.5px; color:var(--dim-2); max-width:640px; margin:4px auto;}
+footer.fb .legal{margin-top:14px; font-size:10.5px; color:var(--dim-2); max-width:720px; margin-left:auto; margin-right:auto;}
+
+@media (max-width:860px){
+  .cos{flex-direction:column;}
+  nav.toc{position:static; width:100%; height:auto;}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="brand">
+    <span class="cells"><span></span><span></span><span></span><span></span></span>
+    <b>GUAITA<small>corpus</small></b>
+  </div>
+  <span class="tag">User manual</span>
+  <h1 class="title">A document repository with a viewer, content search, relationship graph, and AI assistant — all in a single file</h1>
+  <p class="lead">guaitaCorpus organizes a folder of PDF, HTML, Markdown, EPUB, LaTeX, and BibTeX documents: it keeps them in their
+    original format, builds metadata records for them, indexes them for full-text search, draws their relationship
+    graph, and, if you set it up, lets you ask questions about them with an external AI model. Everything happens in your
+    browser and in your own folder — no server, no account, no installation.</p>
+  <div class="hero-badges">
+    <span>No server</span><span>No account</span><span>Single HTML file</span>
+    <span>AGPL-3.0</span><span>Local data</span>
+  </div>
+</header>
+
+<div class="cos">
+<nav class="toc" id="toc">
+  <div class="etq">Getting started</div>
+  <a href="#inici">Opening a document repository</a>
+  <a href="#visor">The viewer</a>
+  <a href="#epub">EPUB reader</a>
+  <a href="#importador">Importing documents</a>
+  <div class="etq">Organize</div>
+  <a href="#fitxa">Document metadata</a>
+  <a href="#colleccions">Collections</a>
+  <a href="#duplicats">Duplicates</a>
+  <a href="#notebook">Notebook</a>
+  <div class="etq">Find</div>
+  <a href="#cerca">Search and filters</a>
+  <a href="#graf">Relationship graph</a>
+  <div class="etq">Assisted</div>
+  <a href="#ia">AI Assistant</a>
+  <a href="#biblio">Bibliography and citation</a>
+  <a href="#veu">Read aloud</a>
+  <div class="etq">Reference</div>
+  <a href="#panells">Panel map</a>
+  <a href="#faq">FAQ</a>
+</nav>
+
+<main>
+
+<section id="inici">
+  <h2 class="etq">01 · Getting started</h2>
+  <div class="st">Opening a document repository</div>
+  <p>guaitaCorpus doesn't import any document into an internal database: you choose a folder on your computer
+    (the <b>document repository</b>) and it works directly on it, through the browser's file access API.</p>
+  <ol class="steps">
+    <li>Press <b>Choose root folder</b> in the header and select the folder where you keep or want to keep your
+      documents.</li>
+    <li>The browser will ask for read and write permission for that folder. You need to accept it so the
+      app can save records, indexes, and imported documents.</li>
+    <li>guaitaCorpus scans the folder (and its subfolders) for <code>.pdf</code>, <code>.html</code>,
+      <code>.htm</code>, and <code>.md</code> files, and lists them on the left.</li>
+  </ol>
+  <div class="note">Next time you open the app in the same browser, it will try to reconnect automatically
+    to the last folder. If the browser has revoked the permission, the
+    <b>Reconnect folder</b> button appears.</div>
+  <p class="ajuda">HTML files that belong to the same Guaita Apps suite (detected by their
+    license header, not by name) are automatically excluded from the list so they don't index
+    themselves or each other.</p>
+</section>
+
+<section id="visor">
+  <h2 class="etq">02 · Getting started</h2>
+  <div class="st">The viewer</div>
+  <p>Click any document in the list to open it in the main panel:</p>
+  <div class="cards">
+    <div class="card"><h3>PDF</h3><p>Shown with the browser's native reader (the same one you'd use
+      opening a PDF directly). No add-on needed.</p></div>
+    <div class="card"><h3>HTML</h3><p>Loaded in an isolated frame (sandbox) so its own code can't
+      interfere with the app.</p></div>
+    <div class="card"><h3>Markdown</h3><p>Converted to HTML with a small built-in engine (headings, lists,
+      quotes, code, bold, and italics) and shown on a clean reading sheet.</p></div>
+    <div class="card"><h3>EPUB</h3><p>Full reader with a table of contents and chapter navigation —
+      see the next section.</p></div>
+    <div class="card"><h3>LaTeX (.tex)</h3><p>Shows the source code with light highlighting of commands, environments,
+      and comments. It doesn't compile the file or generate a PDF from it.</p></div>
+    <div class="card"><h3>BibTeX (.bib)</h3><p>Instead of raw text, the entries are parsed and shown
+      as a list with title, authorship, and year.</p></div>
+  </div>
+  <p class="ajuda">Checking for new documents in the folder is manual: press <b>⟳ Refresh</b> after you've added
+    or moved files from outside the app.</p>
+</section>
+
+<section id="epub">
+  <h2 class="etq">03 · Getting started</h2>
+  <div class="st">EPUB reader</div>
+  <p>When you open an EPUB, the main panel splits into two columns: the book's table of contents on the
+    left and the current chapter on the right.</p>
+  <ul>
+    <li>Click any entry in the table of contents (including sub-sections) to jump straight
+      to it.</li>
+    <li><b>← Previous</b> and <b>Next →</b> move forward according to the reading order defined by the book itself.</li>
+    <li>Images and internal stylesheets of the chapter display correctly; no internet
+      connection needed.</li>
+  </ul>
+  <p class="ajuda">The table of contents is read from the EPUB itself (EPUB 3 or EPUB 2 format); if the book doesn't
+    carry one, a simple list is generated from the order of the chapters.</p>
+</section>
+
+<section id="importador">
+
+  <h2 class="etq">04 · Getting started</h2>
+  <div class="st">Importing documents</div>
+  <p>The <b>Import</b> button opens a drawer with three ways to grow the document repository:</p>
+  <table class="tbl">
+    <tr><th>Method</th><th>What it does</th></tr>
+    <tr><td>URL or DOI</td><td>If you paste in a DOI, it queries CrossRef and shows title, authorship, and year to
+      help you identify the article — it doesn't download the PDF itself (due to browser restrictions).</td></tr>
+    <tr><td>Bookmarklet</td><td>A link you drag to your bookmarks bar. From any
+      web page, clicking it sends that content to guaitaCorpus.</td></tr>
+    <tr><td>Drag / choose files</td><td>Drop PDF, HTML, MD, EPUB, TeX, or BibTeX files on the indicated area, or
+      choose them with the system picker. They're copied into the root folder.</td></tr>
+  </table>
+  <div class="note warn">The bookmarklet opens a window pointing at guaitaCorpus's current address. If you
+    opened it as a local file (<code>file://</code>), many browsers block this kind of opening from an
+    external page. It works reliably if you serve the app from a local server.</div>
+  <p>When the content is HTML (dragged in or captured by the bookmarklet), a dialog appears with two options:</p>
+  <ul>
+    <li><b>Save original HTML</b>: saves the HTML as-is into the folder, as a snapshot.</li>
+    <li><b>Print to PDF</b>: opens the browser's print dialog so you can save it yourself as a PDF
+      (the browser doesn't allow doing this fully automatically).</li>
+  </ul>
+</section>
+
+<section id="fitxa">
+  <h2 class="etq">05 · Organize</h2>
+  <div class="st">Document metadata</div>
+  <p>With a document open, press <b>Metadata</b> to view and edit its metadata: title, authors, year,
+    tags, whether you've read it or starred it, and quick notes.</p>
+  <ol class="steps">
+    <li>Fill in whichever fields you need. Tags are shown as colored chips — the color is generated
+      by the app from the tag's text, always the same for the same word.</li>
+    <li>Mark the collections you want the document to belong to (see below).</li>
+    <li>Add manual relations to other documents in the repository, with a free-text label such as "cited by" or
+      "version of".</li>
+    <li>Press <b>Save metadata</b>.</li>
+  </ol>
+  <div class="note">Each record is saved as a small <code>.guaita.json</code> file next to the original
+    document, with the same name plus this suffix. The document itself is never modified.</div>
+</section>
+
+<section id="colleccions">
+  <h2 class="etq">06 · Organize</h2>
+  <div class="st">Collections</div>
+  <p>Collections let you group documents without moving them. They're created with the
+    <b>+</b> button on the collections bar (below the search box), and filtered by clicking their chip — "All" removes
+    the filter.</p>
+  <p class="ajuda">For now collections are flat (no nested sub-collections).</p>
+</section>
+
+<section id="duplicats">
+  <h2 class="etq">07 · Organize</h2>
+  <div class="st">Duplicate detection</div>
+  <p>guaitaCorpus computes, in the background, a digital fingerprint (SHA-256) of each document. If two files have
+    exactly the same content, both are marked in the list with the <b>⧉</b> badge; hover over it
+    to see which other file it's a copy of.</p>
+  <p class="ajuda">Files larger than 25 MB are not compared, so as not to slow down the app.</p>
+</section>
+
+<section id="notebook">
+  <h2 class="etq">08 · Organize</h2>
+  <div class="st">Notebook</div>
+  <p>The <b>Notebook</b> button brings all notes together in one place: the ones you've added from the
+    metadata record of each document, and standalone notes that don't belong to any particular file.</p>
+  <ul>
+    <li>Write <code>[[some text]]</code> inside a note to turn it into a link; clicking it filters the
+      Notebook by that text.</li>
+    <li>Each document note shows which file it belongs to; click it to open that file.</li>
+  </ul>
+</section>
+
+<section id="cerca">
+  <h2 class="etq">09 · Find</h2>
+  <div class="st">Search and filters</div>
+  <p>The search box in the sidebar searches simultaneously through the file name, title, authors,
+    tags, <b>and the full content</b> of the documents (PDF included, thanks to a built-in text
+    extraction engine).</p>
+  <div class="map">
+    <div><b>Unread / Starred</b>Filter by the status marked in the record.</div>
+    <div><b>Recent (7d)</b>Documents modified in the last 7 days.</div>
+    <div><b>PDF / HTML / MD</b>Filter by file type.</div>
+  </div>
+  <p>Filters can be combined (they work as a conjunction: all of them must be satisfied at once). With the
+    <b>💾</b> button you can save the current combination of search, filters, and collection as a <b>saved search</b>,
+    which appears as a 🔖 chip under the search box — click to apply it again, double-click to delete it.</p>
+  <div class="note">Text indexing runs in the background right after opening or refreshing the folder.
+    While it's running (visible in the footer), content search may not yet find every document.</div>
+</section>
+
+<section id="graf">
+  <h2 class="etq">10 · Find</h2>
+  <div class="st">Relationship graph</div>
+  <p>The <b>Graph</b> button opens a full-screen visualization with all documents as nodes.
+    Connections are drawn for three reasons:</p>
+  <table class="tbl">
+    <tr><th>Color</th><th>Source of the relation</th></tr>
+    <tr><td>Gray</td><td>Shared tag (only if shared by between 2 and 8 documents — tags that are
+      too common aren't drawn, so as not to clutter the graph).</td></tr>
+    <tr><td>Blue</td><td>Belonging to the same collection.</td></tr>
+    <tr><td>Dashed lime</td><td>Manual relation added from a document's record.</td></tr>
+  </table>
+  <p>Drag nodes to rearrange them, drag the background to pan the view, scroll the mouse
+    wheel to zoom, and click a node to open that document.</p>
+</section>
+
+<section id="ia">
+  <h2 class="etq">11 · Assisted</h2>
+  <div class="st">AI Assistant</div>
+  <p>The <b>AI</b> drawer connects guaitaCorpus to an external language model, entirely under your control:</p>
+  <ol class="steps">
+    <li>Choose the format (<b>OpenAI-compatible</b> or <b>Anthropic</b>), the endpoint, your API key, and the
+      model name, then press <b>Save configuration</b>.</li>
+    <li>Use <b>Ask</b> to ask questions about the corpus: guaitaCorpus selects the most
+      relevant documents according to the search index, sends fragments of them as context, and the answer cites which
+      documents it used.</li>
+    <li><b>Summarize</b> generates a summary of the open document; you can save it as a note with one click.</li>
+    <li><b>Suggest</b> proposes tags based on the content. They're shown as chips: <b>no tag is
+      added until you click one individually.</b></li>
+  </ol>
+  <div class="note stop">The configuration (including the API key) is saved only in the browser
+    (<code>localStorage</code>), never inside the document repository folder. Don't share it if you sync
+    or version-control this folder.</div>
+  <div class="note warn">Depending on the provider, calling it directly from the browser may run into
+    CORS restrictions. If it fails, the error shows the HTTP code returned by the server.</div>
+</section>
+
+<section id="biblio">
+  <h2 class="etq">12 · Assisted</h2>
+  <div class="st">Bibliography and citation</div>
+  <p>The <b>Bibliography</b> drawer always works on the documents currently <b>visible</b> in the list
+    (it respects the search box, filters, and active collection).</p>
+  <ul>
+    <li><b>Export</b> — generates a <code>.bib</code> (BibTeX), <code>.ris</code>, or <code>.json</code>
+      (CSL-JSON) file in the root folder, based on the metadata records.</li>
+    <li><b>Formatted citation</b> — choose a style (APA, Chicago author-date, IEEE, or MLA) and press
+      <b>Generate bibliography</b> to get it already formatted. You can also load any other custom
+      <code>.csl</code> style.</li>
+    <li><b>Import BibTeX / RIS</b> — drag or choose a file; each entry is matched by title similarity
+      to a document already present in the repository (it never creates new ones). Review the marked matches
+      before pressing <b>Import checked items</b>.</li>
+  </ul>
+  <p class="ajuda">ISO 690 has no official CSL implementation available, which is why it isn't included by
+    default among the built-in styles — load a custom one if you need it.</p>
+</section>
+
+<section id="veu">
+  <h2 class="etq">13 · Assisted</h2>
+  <div class="st">Read aloud</div>
+  <p>With a document open, the viewer's top bar offers <b>🔊 Read aloud</b>, <b>⏸ Pause</b>, and
+    <b>⏹ Stop</b>, using the browser's own speech synthesis (no external service). It reads the text already
+    extracted from the document, in English.</p>
+  <p class="ajuda">If the text hasn't finished being extracted yet (indexing in progress), it will let you know —
+    try again in a few seconds.</p>
+</section>
+
+<section id="panells">
+  <h2 class="etq">14 · Reference</h2>
+  <div class="st">Panel map</div>
+  <div class="map">
+    <div><b>Import</b>URL/DOI, bookmarklet, drag files.</div>
+    <div><b>Metadata</b>Metadata, tags, collections, relations, notes.</div>
+    <div><b>Notebook</b>All notes, with [[wiki]] links.</div>
+    <div><b>Graph</b>Full-screen relationship visualization.</div>
+    <div><b>AI</b>Configuration and queries to the language model.</div>
+    <div><b>Bibliography</b>Export, citation, and BibTeX/RIS import.</div>
+  </div>
+  <p class="ajuda">The <kbd>Esc</kbd> key closes any open drawer or dialog.</p>
+</section>
+
+<section id="faq">
+  <h2 class="etq">15 · Reference</h2>
+  <div class="st">Frequently asked questions</div>
+  <details><summary>The browser doesn't offer me "Choose root folder"</summary>
+    <p>You need a browser with support for the File System Access API (recent Chrome or Edge). Other
+      browsers don't implement it yet.</p></details>
+  <details><summary>I reopened the app and it's asking me to reconnect</summary>
+    <p>That's normal: for security, the browser doesn't keep write permission indefinitely without
+      confirmation. Press <b>Reconnect folder</b>.</p></details>
+  <details><summary>The bookmarklet does nothing when I click it</summary>
+    <p>This usually happens when guaitaCorpus was opened directly as a file (<code>file://</code>). Serve the app
+      from a local server so the bookmarklet can open a window from it.</p></details>
+  <details><summary>Search doesn't find text inside a PDF I know is there</summary>
+    <p>Check the indexing indicator in the footer — it might still be processing the larger
+      documents. If the PDF is a scanned image with no text layer, it can't be indexed (guaitaCorpus doesn't do
+      OCR).</p></details>
+  <details><summary>My tags or notes have disappeared</summary>
+    <p>Check that the root folder is the same one as before: metadata lives in
+      <code>.guaita.json</code> files inside the folder, not inside the browser.</p></details>
+  <details><summary>Is it safe to paste in my API key?</summary>
+    <p>It's saved only in this browser's <code>localStorage</code>, never in the folder or on any
+      guaitaCorpus server. Even so, treat it with the same care as any password.</p></details>
+</section>
+
+</main>
+</div>
+
+<footer class="fb">
+  <div class="brand">
+    <span class="cells"><span></span><span></span><span></span><span></span></span>
+    <b>GUAITA<small>corpus</small></b>
+  </div>
+  <p>SBS BIM Consulting 2026</p>
+  <p class="legal">Guaita Apps is distributed "as is", with no warranty of any kind. These tools are designed
+    from a research background and as technical and educational support; verifying the results and any responsibility
+    arising from their use rests solely with the end user.</p>
+</footer>
+
+<script>
+(function(){
+  var enllacos = Array.prototype.slice.call(document.querySelectorAll('nav.toc a'));
+  var seccions = enllacos.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+  function actualitza(){
+    var pos = window.scrollY + 120;
+    var actiu = 0;
+    for(var i=0;i<seccions.length;i++){
+      if(seccions[i] && seccions[i].offsetTop <= pos) actiu = i;
+    }
+    enllacos.forEach(function(a,i){ a.classList.toggle('actiu', i===actiu); });
+  }
+  window.addEventListener('scroll', actualitza, {passive:true});
+  actualitza();
+})();
+</script>
+</body>
+</html>
